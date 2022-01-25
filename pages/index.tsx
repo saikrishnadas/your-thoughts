@@ -26,6 +26,7 @@ export default function Home({ posts }: Props) {
             <Link key={post._id} href={`/post/${post.slug.current}`}>
               <div className="border rounded-lg group cursor-pointer overflow-hidden">
                 <img
+                  loading="lazy"
                   className="h-60 w-full object-cover group-hover:scale-105 transition-transform duration-200 ease-in-out"
                   src={urlFor(post.mainImage).url()!}
                   alt=""
@@ -39,7 +40,8 @@ export default function Home({ posts }: Props) {
                   </div>
 
                   <img
-                    className="h-12 w-12 rounded-full"
+                    loading="lazy"
+                    className="h-12 w-12 rounded-full object-cover"
                     src={urlFor(post.author.image).url()!}
                     alt=""
                   />
