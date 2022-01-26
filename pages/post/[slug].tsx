@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GetStaticProps } from "next";
 import Header from "../../components/Header";
 import { sanityClient, urlFor } from "../../sanity";
 import { Post } from "../../typings";
 import PortableText from "react-portable-text";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { shuffle } from "lodash";
 
 interface IFormInput {
   _id: string;
@@ -17,8 +18,19 @@ interface Props {
   post: Post;
 }
 
+const colors = [
+  "from-indigo-500",
+  "from-green-500",
+  "from-blue-500",
+  "from-red-500",
+  "from-yellow-500",
+  "from-purple-500",
+  "from-pink-500",
+];
+
 function Post({ post }: Props) {
   const [submitted, setSubmitted] = useState(false);
+  const [color, setColor]: any = useState(null);
   const {
     register,
     handleSubmit,
@@ -40,15 +52,15 @@ function Post({ post }: Props) {
       });
   };
 
+  useEffect(() => {
+    setColor(shuffle(colors).pop());
+  }, []);
+
   return (
     <main>
       <Header />
 
-      <img
-        className="w-full h-40 object-cover"
-        src={urlFor(post.mainImage).url()!}
-        alt=""
-      />
+      <div className={`w-full h-40 bg-gradient-to-b to-white ${color}`} />
 
       <article className="max-w-3xl mx-auto p-5">
         <h1 className="text-3xl mt-10 mb-3">{post.title}</h1>
@@ -121,13 +133,14 @@ function Post({ post }: Props) {
               {...register("name", { required: true })}
               className="shadow border rounded py-2 px-3 form-input mt-1 block w-full ring-yellow-500 outline-none focus:ring"
               type="text"
-              placeholder="Sai Krishna Das"
+              placeholder="Enter your name"
             />
           </label>
           <label className="block mb-5">
             <span className="text-gray-700">Email</span>
             <input
               {...register("email", { required: true })}
+              placeholder="Enter your email address"
               className="shadow border rounded py-2 px-3 form-input mt-1 block w-full ring-yellow-500 outline-none focus:ring"
               type="email"
             />
@@ -137,7 +150,7 @@ function Post({ post }: Props) {
             <textarea
               {...register("comment", { required: true })}
               className="shadow border rounded py-2 px-3 form-textarea mt-1 block w-full ring-yellow-500 outline-none focus:ring"
-              placeholder="Sai Krishna Das"
+              placeholder="Type your comment here...."
               rows={8}
             />
           </label>
